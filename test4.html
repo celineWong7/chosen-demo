@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>chosen下拉菜单onchange事件</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="tools/chosen.css">
+    <style type="text/css">
+        #select1,#select2 {
+            min-width: 100px;
+        }
+        #select3 {
+            width: 500px;
+        }
+
+    </style>
+</head>
+<body>
+
+
+<script type="text/javascript">
+    /** setAddrPart 设置地址联动下拉菜单 - select元素分散方式 */
+function setAddrPart(){
+    // 设置国家下拉菜单
+    WJ.Dict.setSelect("country", getAddressUrl, function(){
+        AddrSelectChange($("select[name='country']"));
+    });
+
+    function AddrSelectChange(thisEle){
+        // 清空国家后面的选项
+        $(thisEle).nextAll().empty();
+
+
+        if($(thisEle).attr('name') =='country') {
+            // 如果当前选项是国家，设置下一级为省/州
+            var options = "<option value=''  selected >省/州</option> ";
+            var nextSelect = $(thisEle).next();
+            nextSelect.html(options);
+
+            // 继续下一级为市/城市
+            options = "<option value=''  selected >市/城市</option> ";
+            nextSelect = nextSelect.next();
+            nextSelect.html(options);
+
+
+        }else  if($(thisEle).attr('name') =='province') {
+            // 若果当前选项是省/州，设置下一级为市/城市
+            var options = "<option value=''  selected >市/城市</option> ";
+            var nextSelect = $(thisEle).next();
+            nextSelect.html(options);
+        }
+
+        // 获取选项value值
+        var value = $(thisEle).val();
+        var placeholder = '省/州';
+        if($(thisEle).attr('name') =='province') {
+            placeholder ='市/城市';
+        }
+
+        // 如果当前选项value为空，啥都不做。
+        if(!WJ.Object.notNull(value)) {
+            return;
+        }
+
+        // 当前选项value有值，构造请求地址
+        var getAddressParam = "?parentId="+value;
+
+        // 开始请求下一级数据
+        WJ.Ajax.doRequest("", getAddressUrl+getAddressParam, null, function(data){
+            var result = data.obj;
+
+            // 制作option模板
+            var optionTempalte = "<option  value='%id%'>%name%</option>";
+            //var options ="<option  value=''></option>";
+
+            // 设置预选项/提示项（相当于选项可以为空）
+            var options = "<option value=''  selected >"+placeholder+"</option> ";
+
+            // 根据请求数据构造所有option选项
+            $.each(result, function( key, value ) {
+                options += optionTempalte.replace(/%id%/g,value.id).replace(/%name%/g,value.name);
+            });
+
+            // 填充数据
+            var nextSelect = $(thisEle).next();
+            nextSelect.html(options);
+
+            // 设置初始值
+            var initValue = nextSelect.attr("initValue");
+            if(WJ.Object.notEmpty(initValue)) {
+                nextSelect.val(initValue);
+            }
+
+            // 判断下一级是否有数据，没有数据就都隐藏；有数据就显示。
+            if(result.length >0) {
+                $(thisEle).nextAll().show(); // 20180703 有后续数据，显示后续选项
+                onAreaChange(nextSelect);
+            }else {
+                $(thisEle).nextAll().hide();
+            }
+        });
+
+    }
+}
+
+
+    
+</script>
+</body>
+</html>
+
+

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>chosen多选初始化</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="tools/chosen.css">
+	<style type="text/css">
+		#select1,#select2 {
+			min-width: 100px;
+		}
+		#select3 {
+			width: 500px;
+		}
+
+	</style>
+</head>
+<body>
+
+<h3>1. 多选</h3>
+<p>设置multiple属性</p>
+<select id="select1" data-placeholder="请选择一些选项" multiple="" title="可以多选">
+	<option>中国</option>
+	<option>俄罗斯</option>
+	<option>巴黎</option>
+</select>
+
+<h3>2. 多选 初始化</h3>
+<p>设置multiple属性</p>
+<select id="select2" data-placeholder="请选择一些选项" multiple="" title="可以多选">
+	<option value="china">中国</option>
+	<option value="russian">俄罗斯</option>
+	<option value="paris">巴黎</option>
+</select>
+
+<h3>3. 多选 初始化 （异步数据）</h3>
+<p>设置multiple属性</p>
+<select id="select3" data-placeholder="请选择一些选项" multiple title="可以多选">
+	<option value="china">中国</option>
+	<option value="russian">俄罗斯</option>
+	<option value="paris">巴黎</option>
+</select>
+
+
+<script type="text/javascript" src="../jq/jq.min.js"></script>
+<script type="text/javascript" src="tools/chosen.jquery.js"></script>
+<!-- <script type="text/javascript" src="tools/prism.js"></script> -->
+
+
+<script type="text/javascript">
+
+	$("#select1").chosen({
+		max_selected_options:10, // 限制可以选择的数量，默认无穷
+		// single_backstroke_delete:false // 多选项点击删除/退格会先选中，再点击才删除。默认直接删除
+	});
+
+
+// 1 若是chosen实例化前进行select的赋值：
+	// $("#select2").val("china"); // yes. 单值可以触发选中
+	// $("#select2").val("china,paris"); // no. 多值不能触发选中
+
+	$("#select2").chosen({});
+
+// 2 若是在实例化后进行select赋值：要记得进行 'chosen:updated'
+	// $("#select2").val("china"); // yes.
+	// $("#select2").val("china,paris"); // no.
+	// $("#select2").trigger('chosen:updated');
+
+//3 多值初始化，可以考虑
+	$("option[value='china']").prop("selected", true);
+	$("option[value='paris']").prop("selected", true);
+	$("#select2").trigger('chosen:updated');
+
+
+
+
+// 3 如果chosen的实例化依赖后台数据，则要等实例化完成了再赋值：可以考虑调用 'chonsen:ready' 触发事件
+	$("#select3").on('chosen:ready', function(){
+		// alert("88")
+		$("#select3").val("china");
+		// $("option[value='china']").prop("selected", true);
+
+	});
+	// $("#select2").trigger('chosen:updated');
+	$("#select3").chosen({});
+	// alert($("#select3").attr("multiple"));
+
+	
+</script>
+</body>
+</html>

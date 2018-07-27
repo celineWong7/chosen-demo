@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>chosen插件测试使用</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="tools/chosen.css">
+	<style type="text/css">
+		#select1,#select2 {
+			min-width: 100px;
+		}
+		#select3 {
+			width: 500px;
+		}
+
+	</style>
+</head>
+<body>
+<h3>1. 普通单选</h3>
+<P>默认选中第一个，必选其中一个</P>
+<select id="select1" data-placeholder="选择语言">
+	<option>USD</option>
+	<option>CNY</option>
+</select>
+<h3>2. 可以清空的单选</h3>
+<p>默认为空，可以清空选项。（注意：要设置一个空的option元素）</p>
+<select id="select2" data-placeholder="选择语言">
+	<option></option>
+	<option>USD</option>
+	<option>CNY</option>
+	<option>aba</option>
+	<option>from china</option>
+</select>
+
+<h3>3. 多选</h3>
+<p>设置multiple属性</p>
+<select id="select3" data-placeholder="请选择一些选项" multiple="" title="可以多选">
+	<option>中国</option>
+	<option>俄罗斯</option>
+	<option>巴黎</option>
+</select>
+
+
+<script type="text/javascript" src="tools/jq.min.js"></script>
+<script type="text/javascript" src="tools/chosen.jquery.js"></script>
+
+<script type="text/javascript">
+	$("#select1").chosen();
+
+	$("#select2").chosen({
+		allow_single_deselect: true, // 可以删除选项
+		no_results_text: "咦，没找到!", // 没有搜索到的提示语句
+		disable_search_threshold: 3, // 当选项小于等于3时，搜索框隐藏
+		search_contains:true // 搜索随意匹配。默认匹配单词
+	});
+
+	$("#select3").chosen({
+		max_selected_options:10, // 限制可以选择的数量，默认无穷
+		// single_backstroke_delete:false // 多选项点击删除/退格会先选中，再点击才删除。默认直接删除
+	});
+	
+</script>
+</body>
+</html>

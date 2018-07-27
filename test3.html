@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>chosen下拉菜单onchange事件</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="tools/chosen.css">
+	<style type="text/css">
+		#select1,#select2 {
+			min-width: 100px;
+		}
+		#select3 {
+			width: 500px;
+		}
+
+	</style>
+</head>
+<body>
+
+<h3>1. 单选</h3>
+<div style="height:100px;">
+	<p>设置保存选项名称</p>
+	<select id="select1" class="save-option-text" data-placeholder="请选择一些选项" title="可以多选" textKey="select1Name">
+		<option value="china">中国</option>
+		<option value="russian">俄罗斯</option>
+		<option value="paris">巴黎</option>
+		<option value="paris2">巴黎</option>
+		<option value="paris3">巴黎</option>
+		<option value="paris4">巴黎</option>
+		<option value="paris5">巴黎</option>
+		<option value="paris6">巴黎</option>
+	</select>
+</div>
+
+<h3>2. 多选</h3>
+<div style="height:100px;">
+	<p>设置保存选项名称</p>
+	<select id="select2" class="save-option-text" data-placeholder="请选择一些选项" title="可以多选" textKey="select2Name" multiple="">
+		<option value="china">中国</option>
+		<option value="russian">俄罗斯</option>
+		<option value="paris">巴黎</option>
+		<option value="paris2">巴黎</option>
+		<option value="paris3">巴黎</option>
+		<option value="paris4">巴黎</option>
+		<option value="paris5">巴黎</option>
+		<option value="paris6">巴黎</option>
+	</select>
+</div>
+
+
+
+<script type="text/javascript" src=".tools/jq.min.js"></script>
+<script type="text/javascript" src="tools/chosen.jquery.js"></script>
+<!-- <script type="text/javascript" src="tools/prism.js"></script> -->
+
+
+<script type="text/javascript">
+
+// 1. 单选
+	$("#select1").chosen({
+	});
+
+	if ($("#select1").hasClass("save-option-text")){
+		var optText = $("#select1").find("option[value="+$("#select1").val()+"]").text();
+		var inputHTML = '<input type="hidden" name="'+$("#select1").attr("textKey")+'" value="'+optText+'"">';
+		$("#select1").before(inputHTML);
+	}
+	$("#select1").on("change",function() {
+		// console.log($(this).val(), $(this).find("option[value="+$(this).val()+"]").text());
+		var optText = $(this).find("option[value="+$(this).val()+"]").text();
+		$(this).prev('input[ name="'+$(this).attr("textKey")+'"]').val(optText);
+
+	});
+
+
+// 2. 多选
+	$("#select2").chosen({});
+
+	if ($("#select2").hasClass("save-option-text")){
+		var optText = $("#select2").find("option[value="+$("#select2").val()+"]").text();
+		var inputHTML = '<input type="hidden" name="'+$("#select2").attr("textKey")+'" value="'+optText+'">';
+		$("#select2").before(inputHTML);
+	}
+	$("#select2").on("change",function() {
+		console.log($(this).val()); // 多选情况下，value是个数组
+		var optText = "";
+
+		if (!$(this).val()) optText = "";
+		else optText = $(this).val().map(function(n) {
+		  return $("#select2").find("option[value="+n+"]").text();
+		}).join(",");
+
+		$(this).prev('input[ name="'+$(this).attr("textKey")+'"]').val(optText);
+	});
+
+
+
+
+	
+</script>
+</body>
+</html>
